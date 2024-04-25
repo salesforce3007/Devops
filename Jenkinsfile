@@ -2,7 +2,7 @@ def sfdxcli
 def toValidate = false;
 def toDeploy=false;
 def instance
-def Test=false;
+def Test=true;
 pipeline {
     agent any
 
