@@ -10,7 +10,7 @@ pipeline {
         stage('setup') {
             steps {
                 script {
-                    sfdxcli = tool 'sfdx cli'
+                    sfdxcli = tool 'sfdx-cli'
                 }
             }
         }
