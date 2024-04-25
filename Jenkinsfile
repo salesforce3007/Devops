@@ -1,12 +1,17 @@
 def sfdxcli
-def orgname = 'my-sc-org'
-def isPREvent = false
-def isMergeEvent = false;
+def toValidate = false;
+def toDeploy=false;
 def instance
+def Test=false;
 pipeline {
     agent any
 
     stages {
+        stage('print env'){
+          steps {
+                bat 'set'
+            }
+        }
         stage('setup') {
             steps {
                 script {
@@ -15,39 +20,35 @@ pipeline {
             }
         }
 
-        stage('identify event') {
-            steps {
-                script {
-                    if(env.CHANGE_ID != null) {
-                        echo "this is pull request event"
-                        env.isPREvent = true
-                    } else if(env.GIT_BRANCH == 'main') {
-                        echo "this is merge event"
-                        env.isMergeEvent = true
-                    }
-                }
-            }
 
-        }
-
-       
+       stage('identify event'){
+           steps{
+               script{
+                   withCredentials([file(credentialsId: '684cc70c-9dde-4b78-b5f7-05673548e4c3', variable: 'CERT_KEY_FILE')]) {
+                        def status = bat "${sfdxcli}/sf org login jwt --client-id 3MVG9uk_cDhyHiA5ob_g8cpLUOdlbPLt9hMkMECaqIbSXZgEWaGWNkqd1Df9jJBrtF8rYCdcHbYtQXyss0X9b --jwt-key-file %CERT_KEY_FILE% --username  ishasingh7003@brave-unicorn-vcg87b.com --alias qa --instance-url https://login.salesforce.com "
+                   }
+          echo env.GIT_BRANCH
+           if(env.GIT_BRANCH=~'origin/feature/*'){
+               echo 'inside featur'
+               env.toValidate=true
+           }
+           else if(env.GIT_BRANCH=='origin/main'){
+               echo 'inside main'
+               env.toDeploy=true
+           }
+           }
+           }
+       }
         
         stage('Validate') {
             when {
                 expression {
-                    return env.isPREvent
+                    return env.toValidate
                 }
             }
     
             steps {
-                echo "current branch name: ${BRANCH_NAME}"
-                echo "CHANGE BRANCH NAME:: ${CHANGE_BRANCH}"
-                echo "CHANGE TARGET NAME:: ${CHANGE_TARGET}"
-                echo "current commit: ${GIT_COMMIT}"
-                bat "${sfdxcli}/sf --version"
-                echo "validating current branch"
-                echo "instance name: ${env.instance}"
-                bat "${sfdxcli}/sf project deploy start -o ${env.instance} --dry-run --json -d force-app/main/default --ignore-conflicts"
+                bat "${sfdxcli}/sf project deploy start -o qa --dry-run --json -d force-app/main/default --ignore-conflicts"
             }
         }
 
@@ -56,16 +57,16 @@ pipeline {
         stage ('deployment') {
             when {
                 expression {
-                    return env.isMergeEvent
+                    return env.toDeploy
                 }
             }
             steps {
                 echo "deploy event captured, deploying..."
-                echo "instance name: ${env.instance}"
-                bat "${sfdxcli}/sf project deploy start -o ${env.SF_USERNAME} --dry-run --json -d force-app/main/default --ignore-conflicts"
+                bat "${sfdxcli}/sf project deploy start -o qa --json -d force-app/main/default --ignore-conflicts"
             }
         }
     }
     
 
 }
+
