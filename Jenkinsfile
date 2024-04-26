@@ -1,17 +1,11 @@
 def sfdxcli
 def toValidate = false;
 def toDeploy=false;
-def instance
-def Test=false;
+
 pipeline {
     agent any
 
     stages {
-        stage('print env'){
-          steps {
-                bat 'set'
-            }
-        }
         stage('setup') {
             steps {
                 script {
@@ -24,11 +18,11 @@ pipeline {
        stage('identify event'){
            steps{
                script{
-                   withCredentials([file(credentialsId: '684cc70c-9dde-4b78-b5f7-05673548e4c3', variable: 'CERT_KEY_FILE')]) {
-                        def status = bat "${sfdxcli}/sf org login jwt --client-id 3MVG9uk_cDhyHiA5ob_g8cpLUOdlbPLt9hMkMECaqIbSXZgEWaGWNkqd1Df9jJBrtF8rYCdcHbYtQXyss0X9b --jwt-key-file %CERT_KEY_FILE% --username  ishasingh7003@brave-unicorn-vcg87b.com --alias qa --instance-url https://login.salesforce.com "
+                   withCredentials([file(credentialsId: "${SF_CRED_ID}", variable: 'CERT_KEY_FILE')]) {
+                        def status = bat "${sfdxcli}/sf org login jwt --client-id ${SF_CLIENT_ID} --jwt-key-file %CERT_KEY_FILE% --username  ${SF_USER_NAME} --alias ${SF_ALIAS} --instance-url ${SF_INSTANCE_URL} "
                    }
           echo env.GIT_BRANCH
-           if(env.GIT_BRANCH=~'origin/feature/*'){
+           if(env.GIT_BRANCH=~'feature/*'){
                echo 'inside featur'
                env.toValidate=true
            }
@@ -69,4 +63,3 @@ pipeline {
     
 
 }
-
