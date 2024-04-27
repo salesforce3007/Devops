@@ -44,7 +44,7 @@ pipeline {
     
             steps {
                 echo "running sf scanner..."
-                bat "${sfdxcli}/sf scanner run -t '.\\**\\*.js,.\\**\\*.cls' --severity-threshold 1"
+                bat "${sfdxcli}/sf scanner run -t .\**\*.js,.\**\*.cls --severity-threshold 1"
             }
         }
 
