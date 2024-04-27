@@ -42,6 +42,7 @@ pipeline {
             }
     
             steps {
+                echo "validating ....."
                 bat "${sfdxcli}/sf project deploy start -o qa --dry-run --json -d force-app/main/default --ignore-conflicts"
             }
         }
