@@ -1,6 +1,7 @@
 def sfdxcli
-def toValidate = false;
-def toDeploy=false;
+def toValidate = false
+def toDeploy=false
+def isPREvent = false
 
 pipeline {
     agent any
@@ -23,8 +24,9 @@ pipeline {
                    }
           echo env.GIT_BRANCH
            if(env.GIT_BRANCH=~'feature/*'){
-               echo 'inside featur'
+               echo 'inside feature'
                env.toValidate=true
+               env.isPREvent = true
            }
            else if(env.GIT_BRANCH=='origin/main'){
                echo 'inside main'
@@ -33,6 +35,19 @@ pipeline {
            }
            }
        }
+       stage('scan code for vulnerabilities') {
+            when {
+                expression {
+                    return env.isPREvent
+                }
+            }
+    
+            steps {
+                echo "running sf scanner..."
+                bat "${sfdxcli}/sf scanner run -t '.\\**\\*.js,.\\**\\*.cls' --severity-threshold 1"
+            }
+        }
+
         
         stage('Validate') {
             when {
