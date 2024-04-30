@@ -77,7 +77,8 @@ pipeline {
               mail body: "deploy", subject: "DecDemo", to: "ishasingh7003@gmail.com"
             }
         }
-        post {
+    }
+    post {
         always {
             emailext (
                 to: 'ishasingh7003@gmail.com',
@@ -93,7 +94,5 @@ pipeline {
             )
         }
     }
-    }
-    
 
 }
