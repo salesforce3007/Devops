@@ -59,6 +59,7 @@ pipeline {
             steps {
                 echo "validating ....."
                 bat "${sfdxcli}/sf project deploy start -o qa --dry-run --json -d force-app/main/default --ignore-conflicts"
+                mail body: "validation", subject: "DecDemo", to: "ishasingh7003@gmail.com"
             }
         }
 
@@ -73,6 +74,7 @@ pipeline {
             steps {
                 echo "deploy event captured, deploying..."
                 bat "${sfdxcli}/sf project deploy start -o qa --json -d force-app/main/default --ignore-conflicts"
+              mail body: "deploy", subject: "DecDemo", to: "ishasingh7003@gmail.com"
             }
         }
     }

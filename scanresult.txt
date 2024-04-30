@@ -1,0 +1,12 @@
+ Location                                         Description                   Category      URL                                                                                 
+ ──────────────────────────────────────────────── ───────────────────────────── ───────────── ─────────────────────────────────────────────────────────────────────────────────── 
+ force-app\main\default\classes\Calculator.cls:1  Missing ApexDoc comment       Documentation https://pmd.github.io/pmd-6.55.0/pmd_rules_apex_documentation.html#apexdoc          
+ force-app\main\default\classes\Calculator.cls:2  Avoid empty block statements. Error Prone   https://pmd.github.io/pmd-6.55.0/pmd_rules_apex_errorprone.html#emptystatementblock 
+ force-app\main\default\classes\Calculator.cls:2  Missing ApexDoc comment       Documentation https://pmd.github.io/pmd-6.55.0/pmd_rules_apex_documentation.html#apexdoc          
+ force-app\main\default\classes\Calculator.cls:5  Missing ApexDoc comment       Documentation https://pmd.github.io/pmd-6.55.0/pmd_rules_apex_documentation.html#apexdoc          
+ force-app\main\default\classes\Calculator.cls:8  Missing ApexDoc comment       Documentation https://pmd.github.io/pmd-6.55.0/pmd_rules_apex_documentation.html#apexdoc          
+ force-app\main\default\classes\Calculator.cls:11 Missing ApexDoc comment       Documentation https://pmd.github.io/pmd-6.55.0/pmd_rules_apex_documentation.html#apexdoc          
+ force-app\main\default\classes\Calculator.cls:14 Missing ApexDoc comment       Documentation https://pmd.github.io/pmd-6.55.0/pmd_rules_apex_documentation.html#apexdoc          
+Executed pmd, found 7 violation(s) across 1 file(s).
+Executed retire-js, found 0 violation(s) across 0 file(s).
+Rule violations were logged to the console.
