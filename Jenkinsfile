@@ -11,6 +11,7 @@ pipeline {
             steps {
                 script {
                     sfdxcli = tool 'sfdx-cli'
+                    writeFile file: 'log.txt', text: 'Temporary log file.'
                 }
             }
         }
@@ -81,17 +82,18 @@ pipeline {
     post {
         always {
             emailext (
-                to: 'ishasingh7003@gmail.com',
-                subject: 'Jenkins Build Result',
-                body: '''Hello,
+                subject: "Jenkins Build ${currentBuild.currentResult}: Job ${env.JOB_NAME}",
+                 body: '''Hello,
 
                 Please find the attached report for the build.
 
                 Thanks,
                 Jenkins
                 ''',
-                attachmentsPattern: '**/*.txt' // This will attach all .txt files from the workspace
+                attachmentsPattern: 'log.txt',
+                recipientProviders:  [requestor()]
             )
+            bat 'del  log.txt'
         }
     }
 
