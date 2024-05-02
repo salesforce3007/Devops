@@ -7,7 +7,7 @@ pipeline {
     agent any
 
     stages {
-        stage('setup') {
+        stage('Setup') {
             steps {
                 script {
                     sfdxcli = tool 'sfdx-cli'
@@ -18,7 +18,7 @@ pipeline {
         }
 
 
-       stage('identify event'){
+       stage('Event'){
            steps{
                script{
                    withCredentials([file(credentialsId: "${SF_CRED_ID}", variable: 'CERT_KEY_FILE')]) {
@@ -37,7 +37,7 @@ pipeline {
            }
            }
        }
-       stage('scan code for vulnerabilities') {
+       stage('Scan') {
             when {
                 expression {
                     return env.isPREvent
@@ -67,7 +67,7 @@ pipeline {
 
 
 
-        stage ('deployment') {
+        stage ('Deployment') {
             when {
                 expression {
                     return env.toDeploy
