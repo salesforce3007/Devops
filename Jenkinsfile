@@ -11,7 +11,8 @@ pipeline {
             steps {
                 script {
                     sfdxcli = tool 'sfdx-cli'
-                    writeFile file: 'log.txt', text: 'Temporary log file.'
+                    writeFile file: 'ScannerResult.txt', text: 'Temporary scanner file.'
+                    writeFile file: 'BuildResult.txt', text: 'Temporary build file.'
                 }
             }
         }
@@ -45,7 +46,7 @@ pipeline {
     
             steps {
                 echo "running sf scanner..."
-                bat "${sfdxcli}/sf scanner run --target '.\\**\\*.js,.\\**\\*.cls' --severity-threshold 1 > log.txt"
+                bat "${sfdxcli}/sf scanner run --target '.\\**\\*.js,.\\**\\*.cls' --severity-threshold 1 > ScannerResult.txt"
             }
         }
 
@@ -59,7 +60,7 @@ pipeline {
     
             steps {
                 echo "validating ....."
-                bat "${sfdxcli}/sf project deploy start -o qa --dry-run --json -d force-app/main/default --ignore-conflicts"
+                bat "${sfdxcli}/sf project deploy start -o qa --dry-run --json -d force-app/main/default --ignore-conflicts > BuildResult.txt"
                 
             }
         }
@@ -74,7 +75,7 @@ pipeline {
             }
             steps {
                 echo "deploy event captured, deploying..."
-                bat "${sfdxcli}/sf project deploy start -o qa --json -d force-app/main/default --ignore-conflicts"
+                bat "${sfdxcli}/sf project deploy start -o qa --json -d force-app/main/default --ignore-conflicts > BuildResult.txt"
               
             }
         }
@@ -90,10 +91,10 @@ pipeline {
                 Thanks,
                 Jenkins
                 ''',
-                attachmentsPattern: 'log.txt',
+                attachmentsPattern: 'ScannerResult.txt , BuildResult.txt',
                 recipientProviders:  [requestor()]
             )
-            bat 'del  log.txt'
+            bat 'del  ScannerResult.txt , BuildResult.txt'
         }
     }
 
